@@ -1,788 +1,931 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project X • Headtrick 2026</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="description" content="Aimbot Kauazin - Melhor auxilior">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Aimbot Kauazin">
+    <title>projectx</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- Configurações para PWA: Nome e ícone como Santander -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#e60000"> <!-- Vermelho do Santander -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Santander">
-  <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/f6/77/61f677c6-fa41-6d63-5631-01dc0f2136b7/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/192x192.png">
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-  <style>
-    :root {
-      --primary: #808080;
-      --primary-dark: #606060;
-      --primary-glow: rgba(128, 128, 128, 0.5);
-      --bg: #202020;
-      --card: rgba(50, 50, 50, 0.85);
-      --text: #f0f0f0;
-      --text-muted: #c0c0c0;
-      --accent: #a0a0a0;
-      --success: #4caf50;
-      --error: #f44336;
-      --warning: #ff9800;
-    }
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow-x: hidden;
-    }
+        .drop {
+            position: absolute;
+            bottom: 100%;
+            width: 3px;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, rgba(200, 200, 200, 0.9), rgba(255, 255, 255, 0.7));
+            animation: fall linear infinite;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
 
-    #particles-js { position: fixed; inset: 0; z-index: 0; }
+        @keyframes fall {
+            to {
+                transform: translateY(calc(100vh + 100px));
+            }
+        }
 
-    .container {
-      position: relative;
-      z-index: 1;
-      width: 94%;
-      max-width: 440px;
-      backdrop-filter: blur(15px);
-      background: var(--card);
-      border-radius: 24px;
-      border: 1px solid rgba(128,128,128,0.3);
-      box-shadow: 0 0 50px var(--primary-glow);
-      overflow: hidden;
-    }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
 
-    .login-box, .panel { padding: 36px 26px; text-align: center; }
+        /* TELA DE KEY */
+        .key-screen {
+            background: rgba(50, 50, 50, 0.95);
+            border: 3px solid #ffffff;
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
 
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 5px solid var(--primary);
-      box-shadow: 0 0 50px var(--primary-glow);
-      object-fit: cover;
-      margin-bottom: 28px;
-    }
+        .key-header {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
 
-    h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 14px; text-shadow: 0 0 25px var(--primary-glow); }
-    h2 { font-size: 1.6rem; color: var(--accent); margin-bottom: 22px; }
+        .key-subtitle {
+            color: #cccccc;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
 
-    .form-input {
-      width: 100%;
-      padding: 18px;
-      margin: 18px 0;
-      border: 1px solid rgba(128,128,128,0.5);
-      border-radius: 14px;
-      background: rgba(30,30,30,0.8);
-      color: white;
-      font-size: 1.15rem;
-      text-align: center;
-    }
-    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 25px var(--primary-glow); outline: none; }
+        .lock-icon {
+            font-size: 60px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+        }
 
-    .btn, .btn-link {
-      width: 100%;
-      padding: 18px;
-      margin: 14px 0;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: white;
-      font-weight: bold;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.35s ease;
-      box-shadow: 0 8px 30px rgba(128,128,128,0.6);
-      display: block;
-      text-decoration: none;
-      text-align: center;
-    }
-    .btn:hover:not(:disabled), .btn-link:hover { 
-      transform: translateY(-4px) scale(1.02); 
-      box-shadow: 0 15px 40px rgba(128,128,128,0.8); 
-    }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .key-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+            transition: all 0.3s;
+        }
 
-    .tabs {
-      display: flex;
-      margin: 28px 0 22px;
-      border-radius: 14px;
-      background: rgba(0,0,0,0.6);
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    .tab {
-      flex: 1 0 auto;
-      padding: 18px;
-      color: var(--text-muted);
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.4s;
-      min-width: 90px;
-    }
-    .tab.active { background: var(--primary); color: white; box-shadow: inset 0 0 15px rgba(0,0,0,0.4); }
+        .key-input:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
 
-    .content { display: none; }
-    .content.active { display: block; animation: fadeIn 0.6s ease; }
+        .key-input::placeholder {
+            color: #888;
+            letter-spacing: normal;
+        }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .verify-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #7a7a7a 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+        }
 
-    label {
-      display: flex;
-      align-items: center;
-      margin: 18px 0;
-      font-size: 1.05rem;
-      cursor: pointer;
-    }
-    input[type="checkbox"], input[type="radio"] {
-      accent-color: var(--primary);
-      margin-right: 16px;
-      transform: scale(1.5);
-    }
+        .verify-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
 
-    select, input[type="range"] {
-      width: 100%;
-      padding: 16px;
-      margin: 16px 0;
-      border-radius: 14px;
-      border: 1px solid rgba(128,128,128,0.5);
-      background: rgba(30,30,30,0.8);
-      color: white;
-      font-size: 1.05rem;
-    }
-    input[type="range"] {
-      height: 12px;
-      -webkit-appearance: none;
-      background: rgba(128,128,128,0.25);
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 25px var(--primary-glow);
-      cursor: pointer;
-    }
+        .verify-button:active {
+            transform: scale(0.98);
+        }
 
-    .divider { height: 1px; background: rgba(128,128,128,0.35); margin: 28px 0; }
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
 
-    .toast {
-      position: fixed;
-      bottom: 60px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.95);
-      color: var(--primary);
-      padding: 20px 40px;
-      border-radius: 20px;
-      font-weight: bold;
-      z-index: 9999;
-      opacity: 0;
-      transition: all 0.6s ease;
-      border: 1px solid var(--primary);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-    }
-    .toast.show { opacity: 1; bottom: 100px; }
+        .success-message {
+            color: #51cf66;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
 
-    .color-btn {
-      height: 65px;
-      border-radius: 14px;
-      cursor: pointer;
-      border: 4px solid transparent;
-      transition: border 0.4s, transform 0.3s;
-    }
-    .color-btn:hover { transform: scale(1.08); }
+        .key-info {
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-    .status-indicator {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--error);
-      margin-left: 10px;
-    }
-    .status-indicator.active { background: var(--success); }
+        /* TELA PRINCIPAL */
+        .container {
+            background: rgba(50, 50, 50, 0.95);
+            border: 3px solid #ffffff;
+            border-radius: 25px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 10;
+            display: none;
+        }
 
-    @media (max-width: 480px) {
-      .container { width: 96%; padding: 28px 20px; }
-      .btn, .btn-link { font-size: 1.05rem; padding: 16px; }
-    }
-  </style>
+        .header {
+            text-align: center;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #6b6b6b 0%, #9a9a9a 100%);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .tab:not(.active) {
+            background: rgba(0, 0, 0, 0.5);
+            color: #aaa;
+        }
+
+        .tab:not(.active):hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 5px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .checkbox.checked {
+            background: #6b6b6b;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .option-label {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .slider-container {
+            margin: 30px 0;
+        }
+
+        .slider-label {
+            color: white;
+            font-size: 14px;
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            background: rgba(200, 200, 200, 0.3);
+            border-radius: 10px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .section-title {
+            color: #ffffff;
+            text-align: center;
+            font-size: 16px;
+            margin: 30px 0 20px 0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .radio-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .radio.checked {
+            background: #6b6b6b;
+            border-color: #6b6b6b;
+        }
+
+        .radio.checked::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-label {
+            color: white;
+            font-size: 14px;
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio.checked + .radio-label {
+            background: linear-gradient(135deg, #6b6b6b 0%, #9a9a9a 100%);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .inject-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #7a7a7a 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .inject-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        .inject-button:active {
+            transform: scale(0.98);
+        }
+
+        .tab-content {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .info-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            color: #cccccc;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: white;
+            font-size: 16px;
+        }
+
+        .info-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            margin: 25px 0;
+        }
+
+        .credits-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .credits-text {
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .install-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .install-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+        }
+
+        .install-button:active {
+            transform: scale(0.98);
+        }
+
+        .install-icon {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
+    <div class="rain" id="rain"></div>
+    
+    <!-- TELA DE KEY -->
+    <div class="key-screen" id="keyScreen">
+        <div class="lock-icon">🔐</div>
+        <div class="key-header">ACESSO RESTRITO</div>
+        <div class="key-subtitle">Insira sua chave de acesso para continuar</div>
+        
+        <input type="text" class="key-input" id="keyInput" placeholder="Digite a Key aqui" maxlength="20">
+        
+        <button class="verify-button" onclick="verifyKey()">VERIFICAR KEY</button>
+        
+        <div class="error-message" id="errorMsg">❌ Key inválida! Tente novamente.</div>
+        <div class="success-message" id="successMsg">✅ Key aceita! Carregando...</div>
+        
+        <div class="key-info">
+            Melhor Auxilio: <strong></strong>, <strong></strong><br>
+            Auxilio ativo 
+        </div>
 
-  <div id="particles-js"></div>
-
-  <!-- Login -->
-  <div class="container login-box" id="loginBox">
-    <img src="https://i.postimg.cc/gcZd0K8g/description.webp" class="avatar" alt="X" 
-         onerror="this.src='https://via.placeholder.com/120/808080/000?text=X'">
-    <h1>HEADTRICK 2026</h1>
-    <p style="color:#a0a0a0; font-weight:bold; margin:24px 0;">⚠️ KEY - 1 DISPOSITIVO / ANTI-BAN AVANÇADO</p>
-
-    <input type="password" id="licenseKey" class="form-input" placeholder="XXXX-XXXX-XXXX"/>
-    <button class="btn" id="enterBtn">ENTRAR</button>
-    <button class="btn" style="background:#4d4d4d;" onclick="window.open('https://discord.gg/9jEQEHuk','_blank')">DISCORD OFICIAL</button>
-  </div>
-
-  <!-- Painel Principal -->
-  <div class="container panel" id="mainPanel" style="display:none; max-height:92vh; overflow-y:auto;">
-    <h2>PROJECT X RED v4.2</h2>
-    <div class="divider"></div>
-
-    <div class="tabs">
-      <div class="tab active" data-tab="aimbot">Aimbot</div>
-      <div class="tab" data-tab="extra">Extra</div>
-      <div class="tab" data-tab="otimizacao">Otimização</div>
-      <div class="tab" data-tab="config">Config</div>
-      <div class="tab" data-tab="info">Info</div>
+        <button class="install-button" id="installButton" onclick="installApp()">
+            <span class="install-icon">📲</span>INSTALAR APLICATIVO
+        </button>
     </div>
 
-    <div id="aimbot" class="content active">
-      <label><input type="checkbox" id="ativarAuxilio" checked> Ativar Auxílio<span class="status-indicator"></span></label>
-      <label><input type="checkbox" id="ativarFov"> Ativar FOV Dinâmico</label>
+    <!-- TELA PRINCIPAL -->
+    <div class="container" id="mainScreen">
+        <div class="header">BY (@projectx)</div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab(0, this)">Aimbot</button>
+            <button class="tab" onclick="switchTab(1, this)">Config</button>
+            <button class="tab" onclick="switchTab(2, this)">Extra</button>
+        </div>
 
-      <div id="fovContainer" style="display:none; margin:22px 0;">
-        <input type="range" min="40" max="200" value="90" id="fovRange"/>
-        <p>FOV Dinâmico: <strong id="fovValue">90°</strong></p>
-      </div>
+        <!-- ABA AIMBOT -->
+        <div id="tab-aimbot" class="tab-content">
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">Aim 100%</div>
+            </div>
 
-      <select id="auxType">
-        <option selected>Auxílio Cabeça</option>
-        <option>Auxílio Pescoço</option>
-        <option>Auxílio Peito</option>
-        <option>Auxílio Recoil</option>
-      </select>
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">AimSmooth</div>
+            </div>
 
-      <div id="strengthContainer" style="margin:22px 0;">
-        <input type="range" min="0" max="100" value="50" id="assistStrength"/>
-        <p>Assist Strength: <strong id="strengthValue">50%</strong></p>
-      </div>
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">Precision</div>
+            </div>
 
-      <div style="margin:22px 0;">
-        <input type="range" min="40" max="100" value="85" id="smoothnessRange"/>
-        <p>Smoothness: <strong id="smoothValue">85%</strong></p>
-      </div>
+            <div class="slider-container">
+                <div class="slider-label">Fov <span id="fovValue">5</span></div>
+                <input type="range" min="1" max="20" value="5" class="slider" id="fovSlider" oninput="updateFov(this.value)">
+            </div>
 
-      <div id="maxDistContainer" style="margin:22px 0;">
-        <input type="range" min="10" max="500" value="100" id="maxLockDist"/>
-        <p>Max Lock Distance: <strong id="maxDistValue">100m</strong></p>
-      </div>
+            <select class="dropdown">
+                <option>Auxílio Head</option>
+                <option>Auxílio Chest</option>
+                <option>Auxílio Body</option>
+            </select>
 
-      <div class="divider"></div>
+            <select class="dropdown">
+                <option>Prioridade: Cabeça</option>
+                <option>Prioridade: Pescoço</option>
+                <option>Prioridade: Próximo</option>
+            </select>
 
-      <p style="font-weight:bold; margin:18px 0 12px; color:var(--accent);">Trigger Avançado:</p>
-      <label><input type="radio" name="tipo" value="atirar"> Ao Atirar (Preciso)</label>
-      <label><input type="radio" name="tipo" value="olhar" checked> Ao Olhar/Mirar (Suave)</label>
+            <div class="section-title">Tipo de Sensibilidade:</div>
 
-      <button class="btn" id="ativarBtn">ATIVAR CONFIGURAÇÕES</button>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <div class="radio" onclick="toggleRadio(this)"></div>
+                    <div class="radio-label" onclick="toggleRadio(this.previousElementSibling)">Alta</div>
+                </div>
+                <div class="radio-option">
+                    <div class="radio checked" onclick="toggleRadio(this)"></div>
+                    <div class="radio-label" onclick="toggleRadio(this.previousElementSibling)">Precisa</div>
+                </div>
+            </div>
 
-      <a href="intent:#Intent;package=com.dts.freefireth;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.dts.freefireth;end"
-         class="btn btn-link" id="openFFBtn">ABRIR FREE FIRE + INJETAR</a>
+            <button class="inject-button" onclick="openFreeFire()">INJECT FREE FIRE FILES</button>
+            
+            <button class="inject-button" onclick="installAuxilio()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%); margin-top: 20px;">
+                ⚡ INSTALAR AUXÍLIO NO JOGO
+            </button>
+        </div>
 
-      <button class="btn" id="dnsAndroidBtn">AUXÍLIO DNS ANDROID</button>
-      <button class="btn" id="dnsIphoneBtn">AUXÍLIO DNS IPHONE</button>
+        <!-- ABA CONFIG -->
+        <div id="tab-config" class="tab-content" style="display: none;">
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">Auto Headshot</div>
+            </div>
+
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">No Recoil</div>
+            </div>
+
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">Fast Fire</div>
+            </div>
+
+            <div class="option">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div class="option-label">Infinite Ammo</div>
+            </div>
+        </div>
+
+        <!-- ABA EXTRA (INFO) -->
+        <div id="tab-extra" class="tab-content" style="display: none;">
+            <div class="info-box">
+                <div class="info-title">INFO</div>
+                <div class="info-item">
+                    <div class="info-label">Criador:</div>
+                    <div class="info-value">@projectx</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Versão:</div>
+                    <div class="info-value">2.0</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status:</div>
+                    <div class="info-value">Online ✓</div>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-credits">
+                    <div class="credits-title">CRÉDITOS</div>
+                    <div class="credits-text">
+                        Desenvolvido por projectx<br>
+                        Todos os direitos reservados<br>
+                        © 2026
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="extra" class="content">
-      <h2>Funções Extra</h2>
-      <label><input type="checkbox" id="antiPinadeira" checked> Anti Pinadeira Avançada</label>
-      <label><input type="checkbox" id="antiTremedeira" checked> Anti Tremedeira Avançada</label>
-      <label><input type="checkbox" id="fixarCabeca"> Fixar na Cabeça Suavizado</label>
-      <label><input type="checkbox" id="autoHeadshot"> Auto Headshot (Beta)</label>
-      <label><input type="checkbox" id="noRecoil" checked> No Recoil Avançado</label>
+    <!-- BLOCO GAMECONFIG COMPLETO -->
+    <script type="application/json" id="gameConfig">
+{
+  "com.game.sensitivity": {
+    "SENSITIVITY_MULTIPLIER_LOW_ZOOM": 0.90,
+    "SENSITIVITY_MULTIPLIER_HIGH_ZOOM": 0.80,
+    "AIM_SENSITIVITY_TRANSITION_TIME": "GRADUAL"
+  },
+  "AimBot_Settings": {
+    "AIM_LEVEL_PERCENT": "95%",
+    "AIMBOT_SENSITIVITY": "100%",
+    "SENSITIVITY_WHEN_AIMING": "ANSI/OEM",
+    "BASE_MOUSE_SENSITIVITY": 6.50,
+    "VERTICAL_SENSITIVITY_MULTIPLIER": 2.19,
+    "MOUSE_SMOOTHING": "ENABLE",
+    "MOUSE_FILTERING": 0.0,
+    "LOSS_OF_FOCUS_BY_MOUSE_MOVEMENT": "DISABLED"
+  },
+  "TouchScreen_Settings": {
+    "FORCE_TOUCH_DELAY": 0.1,
+    "BASE_FORCE_PRESSURE": 2.0,
+    "TRIGGERING_FORCE_PRESSURE": 7.0
+  },
+  "Patches": {
+    "aimfov_1x": "MemoryPatch(libil2cpp.so, 0x30665456, 790444E3, 8)"
+  },
+  "Configuration": {
+    "TXT_SETTING_VIEW": "0x10000601",
+    "TXT_SETTING_1XSC": "0x10000601",
+    "TXT_SETTING_2XSC": "0x10000601",
+    "TXT_SETTING_4XSC": "0x10000601",
+    "TXT_SETTING_8XSC": "0x10000601"
+  },
+  "DisplaySettings": {
+    "X": "0x00000686",
+    "Y": "0x000001f4",
+    "CPU": "0x00000064",
+    "GPU": "0x00000064",
+    "DPI": "0x000000f0",
+    "Fov": "2000"
+  },
+  "TouchSettings": {
+    "generalemulatorsensitivity": "0x00000064",
+    "joystick": "0x000003e8",
+    "LEFTCLICK": "0x000003e8",
+    "RIGHTCLICK": "0x000003e8",
+    "rightclicklifter": "0x000003e8",
+    "sensitivity": "0x00000064",
+    "touchsensitivity": "0x000000e1",
+    "MouseSensitivity": "6.00"
+  },
+  "PerformanceSettings": {
+    "ro.min.fling_velocity": 8500,
+    "ro.max.fling_velocity": 16000,
+    "adaptive_touch_sensitivity": "speed",
+    "touch.coverage.calibration": "box",
+    "hwui.refreshRate": 96.0,
+    "triggeringForceTouchPressure": 6.0,
+    "acceleration": "99999.0px/s",
+    "QuietInterval": 0,
+    "KeyRepeatDelay": 0
+  },
+  "AimConfig": {
+    "Enabled": true,
+    "Precision": 0.95,
+    "IsHeadshotMode": true,
+    "Note": "SafeAimConfigParser - Config optimized"
+  }
+}
+    </script>
 
-      <button class="btn" id="ativarExtraBtn">ATIVAR FUNÇÕES EXTRA</button>
-    </div>
-
-    <div id="otimizacao" class="content">
-      <h2>Otimização (Zero Lag)</h2>
-      <label><input type="checkbox" id="limparCache" checked> Limpar Cache Profundo</label>
-      <label><input type="checkbox" id="fecharApps" checked> Fechar Background Total</label>
-      <label><input type="checkbox" id="boostRAM" checked> Boost RAM Máximo</label>
-      <label><input type="checkbox" id="otimizarBateria" checked> Otimizar Bateria + Performance</label>
-      <label><input type="checkbox" id="reduzirLag" checked> Reduzir Lag de Rede</label>
-
-      <div class="divider"></div>
-
-      <p style="font-weight:bold; margin:18px 0 12px; color:var(--accent);">FPS:</p>
-      <select id="fpsSelect">
-        <option value="60">60 FPS Estável</option>
-        <option value="90">90 FPS Balanceado</option>
-        <option value="120">120 FPS Máximo</option>
-        <option value="144" selected>144 FPS Extremo (Experimental)</option>
-      </select>
-
-      <button class="btn" id="aplicarOtimizacaoBtn">APLICAR OTIMIZAÇÃO</button>
-    </div>
-
-    <div id="config" class="content">
-      <p style="margin-bottom:22px; font-weight:700; color:var(--accent);">Cor do Painel:</p>
-      <div class="color-options" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin:22px 0;">
-        <div class="color-btn" style="background:#808080;" data-color="#808080"></div>
-        <div class="color-btn" style="background:#a0a0a0;" data-color="#a0a0a0"></div>
-        <div class="color-btn" style="background:#606060;" data-color="#606060"></div>
-        <div class="color-btn" style="background:#b0b0b0;" data-color="#b0b0b0"></div>
-        <div class="color-btn" style="background:#c0c0c0;" data-color="#c0c0c0"></div>
-        <div class="color-btn" style="background:#ffffff;" data-color="#ffffff"></div>
-        <div class="color-btn" style="background:#ff5722;" data-color="#ff5722"></div>
-        <div class="color-btn" style="background:#2196f3;" data-color="#2196f3"></div>
-        <div class="color-btn" style="background:#4caf50;" data-color="#4caf50"></div>
-      </div>
-
-      <div class="divider"></div>
-      <button class="btn" id="saveConfigBtn">SALVAR CONFIGURAÇÕES</button>
-      <button class="btn" id="loadConfigBtn" style="background: linear-gradient(135deg, #4d4d4d, #606060);">CARREGAR CONFIGURAÇÕES</button>
-    </div>
-
-    <div id="info" class="content">
-      <p><b>Dispositivo:</b> <span id="modelo">—</span></p>
-      <p><b>Key:</b> <span id="key">—</span></p>
-      <p><b>ID:</b> <span id="deviceId">—</span></p>
-      <p><b>Horário:</b> <span id="horario">—</span></p>
-      <p><b>Região:</b> <span id="regiao">—</span></p>
-      <div class="divider"></div>
-      <p style="color:#808080; font-weight:bold;">Sistema Online ✓ Anti-Ban Level Pro</p>
-      <p style="color:#c0c0c0; font-size:1rem; margin-top:18px;">
-        Teste no treino antes de ranqueada. Use com inteligência.
-      </p>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    // =============================================
-    // PROJECT X RED v4.2 - Versão limpa sem simulação fake
-    // Removido: canvas de precisão, EngineV11, contadores de HS/Streak
-    // Data: Fevereiro 2026 - Fhshausu edition
-    // =============================================
-
-    let currentColor = "#808080";
-
-    const config = {
-      aimbot: {
-        active: false,
-        enabled: true,
-        fovEnabled: true,
-        fov: 92,
-        bone: "cabeça",
-        strength: 78,
-        smoothness: 85,
-        maxDistance: 140,
-        trigger: "olhar"
-      },
-      extras: {
-        antiPinadeira: true,
-        antiTremedeira: true,
-        fixarCabeca: true,
-        autoHeadshot: true,
-        noRecoil: true
-      },
-      optimization: {
-        limparCache: true,
-        fecharApps: true,
-        boostRAM: true,
-        otimizarBateria: true,
-        reduzirLag: true,
-        fpsTarget: "144"
-      }
-    };
-
-    // ─────────────────────────────────────────────
-    // Funções auxiliares (mantidas)
-    // ─────────────────────────────────────────────
-
-    function saveConfig() {
-      localStorage.setItem('projectx_config_v42', JSON.stringify(config));
-      showToast("Configurações salvas com sucesso", 2200, 'success');
-    }
-
-    function loadConfig() {
-      const saved = localStorage.getItem('projectx_config_v42');
-      if (saved) {
-        Object.assign(config, JSON.parse(saved));
-        applyConfigToUI();
-        showToast("Configurações restauradas", 2200, 'success');
-      }
-    }
-
-    function applyConfigToUI() {
-      document.getElementById('ativarAuxilio').checked = config.aimbot.enabled;
-      document.getElementById('ativarFov').checked = config.aimbot.fovEnabled;
-      document.getElementById('fovRange').value = config.aimbot.fov;
-      document.getElementById('fovValue').textContent = config.aimbot.fov + '°';
-      document.getElementById('auxType').value = `Auxílio ${config.aimbot.bone.charAt(0).toUpperCase() + config.aimbot.bone.slice(1)}`;
-      document.getElementById('assistStrength').value = config.aimbot.strength;
-      document.getElementById('strengthValue').textContent = config.aimbot.strength + '%';
-      document.getElementById('smoothnessRange').value = config.aimbot.smoothness;
-      document.getElementById('smoothValue').textContent = config.aimbot.smoothness + '%';
-      document.getElementById('maxLockDist').value = config.aimbot.maxDistance;
-      document.getElementById('maxDistValue').textContent = config.aimbot.maxDistance + 'm';
-      document.querySelector(`input[name="tipo"][value="${config.aimbot.trigger}"]`).checked = true;
-
-      Object.keys(config.extras).forEach(key => {
-        const el = document.getElementById(key);
-        if (el) el.checked = config.extras[key];
-      });
-
-      Object.keys(config.optimization).forEach(key => {
-        const el = document.getElementById(key);
-        if (el && el.type === 'checkbox') el.checked = config.optimization[key];
-      });
-      document.getElementById('fpsSelect').value = config.optimization.fpsTarget;
-
-      updateAimbotButton();
-      updateStatusIndicator();
-    }
-
-    function updateTheme(color) {
-      currentColor = color;
-      document.documentElement.style.setProperty('--primary', color);
-      document.documentElement.style.setProperty('--primary-glow', `rgba(${parseInt(color.slice(1,3),16)}, \( {parseInt(color.slice(3,5),16)}, \){parseInt(color.slice(5,7),16)},0.6)`);
-
-      if (window.pJSDom?.[0]?.pJS) {
-        const p = window.pJSDom[0].pJS;
-        p.particles.color.value = color;
-        p.particles.line_linked.color = color;
-        p.fn.particlesRefresh();
-      }
-    }
-
-    function showToast(message, duration = 2800, type = 'info') {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = 'toast show';
-      if (type === 'success') toast.style.color = 'var(--success)';
-      else if (type === 'error') toast.style.color = 'var(--error)';
-      else if (type === 'warning') toast.style.color = 'var(--warning)';
-      else toast.style.color = 'var(--primary)';
-      
-      setTimeout(() => toast.classList.remove('show'), duration);
-    }
-
-    function getDeviceId() {
-      let id = localStorage.getItem("px_device_id");
-      if (!id) {
-        id = "PX-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7).toUpperCase();
-        localStorage.setItem("px_device_id", id);
-      }
-      return id;
-    }
-
-    function getDeviceModel() {
-      const ua = navigator.userAgent;
-      if (/android/i.test(ua)) return (ua.match(/Android [\d.]+; ([\w\s]+) Build/)?.[1] || "Android Device");
-      if (/iPhone/.test(ua)) return "iPhone";
-      return "Dispositivo desconhecido";
-    }
-
-    async function loadSystemInfo(key) {
-      document.getElementById("key").textContent = key || "XXXX-XXXX-XXXX";
-      document.getElementById("deviceId").textContent = getDeviceId();
-      document.getElementById("modelo").textContent = getDeviceModel();
-
-      setInterval(() => {
-        document.getElementById("horario").textContent = new Date().toLocaleTimeString("pt-BR", { hour12: false });
-      }, 1000);
-
-      try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
-        document.getElementById("regiao").textContent = `\( {data.country_name || "?"} ( \){data.region || "??"})`;
-      } catch {
-        document.getElementById("regiao").textContent = "—";
-      }
-    }
-
-    function updateAimbotButton() {
-      const btn = document.getElementById('ativarBtn');
-      if (config.aimbot.active) {
-        btn.textContent = 'DESATIVAR HEADTRICK';
-        btn.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
-      } else {
-        btn.textContent = 'ATIVAR HEADTRICK';
-        btn.style.background = 'linear-gradient(135deg, var(--primary), var(--accent))';
-      }
-    }
-
-    function updateStatusIndicator() {
-      const indicator = document.querySelector('.status-indicator');
-      if (indicator) {
-        indicator.classList.toggle('active', config.aimbot.enabled && config.aimbot.active);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // Tabs
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-          tab.classList.add('active');
-          document.getElementById(tab.dataset.tab).classList.add('active');
-        });
-      });
-
-      // Aimbot controls
-      document.getElementById('ativarAuxilio').onchange = e => { config.aimbot.enabled = e.target.checked; updateStatusIndicator(); };
-      document.getElementById('ativarFov').onchange = e => {
-        config.aimbot.fovEnabled = e.target.checked;
-        document.getElementById('fovContainer').style.display = e.target.checked ? 'block' : 'none';
-      };
-      document.getElementById('fovRange').oninput = e => {
-        config.aimbot.fov = +e.target.value;
-        document.getElementById('fovValue').textContent = e.target.value + '°';
-      };
-      document.getElementById('assistStrength').oninput = e => {
-        config.aimbot.strength = +e.target.value;
-        document.getElementById('strengthValue').textContent = e.target.value + '%';
-      };
-      document.getElementById('smoothnessRange').oninput = e => {
-        config.aimbot.smoothness = +e.target.value;
-        document.getElementById('smoothValue').textContent = e.target.value + '%';
-      };
-      document.getElementById('maxLockDist').oninput = e => {
-        config.aimbot.maxDistance = +e.target.value;
-        document.getElementById('maxDistValue').textContent = e.target.value + 'm';
-      };
-      document.getElementById('auxType').onchange = e => {
-        config.aimbot.bone = e.target.value.toLowerCase().replace('auxílio ', '');
-      };
-      document.querySelectorAll('input[name="tipo"]').forEach(r => {
-        r.onchange = () => config.aimbot.trigger = r.value;
-      });
-
-      // Extras & Otimização
-      ['antiPinadeira','antiTremedeira','fixarCabeca','autoHeadshot','noRecoil'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.onchange = e => config.extras[id] = e.target.checked;
-      });
-      ['limparCache','fecharApps','boostRAM','otimizarBateria','reduzirLag'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.onchange = e => config.optimization[id] = e.target.checked;
-      });
-      document.getElementById('fpsSelect').onchange = e => config.optimization.fpsTarget = e.target.value;
-
-      // Botão principal (sem simulação)
-      document.getElementById('ativarBtn').onclick = () => {
-        config.aimbot.active = !config.aimbot.active;
-        updateAimbotButton();
-        updateStatusIndicator();
-
-        if (config.aimbot.active && config.aimbot.enabled) {
-          showToast(`HEADTRICK ATIVADO • ${config.aimbot.bone.toUpperCase()} • ${config.aimbot.strength}%`, 3800, 'success');
-        } else {
-          showToast('HEADTRICK DESATIVADO', 3200, 'error');
+    <!-- SERVICE WORKER REGISTRATION -->
+    <script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registrado'))
+                    .catch(err => console.log('Erro no Service Worker:', err));
+            });
         }
-      };
 
-      document.getElementById('ativarExtraBtn').onclick = () => {
-        const active = Object.keys(config.extras).filter(k => config.extras[k]);
-        showToast(active.length ? active.map(s => s.replace(/([A-Z])/g,' $1').trim()).join(' + ') + ' ATIVOS' : 'Nenhum extra selecionado', 4200, active.length ? 'success' : 'warning');
-      };
+        // Variável para armazenar o evento de instalação
+        let deferredPrompt;
 
-      document.getElementById('aplicarOtimizacaoBtn').onclick = () => {
-        const list = [];
-        if (config.optimization.limparCache) list.push('Cache');
-        if (config.optimization.fecharApps) list.push('Apps');
-        if (config.optimization.boostRAM) list.push('RAM');
-        if (config.optimization.otimizarBateria) list.push('Bateria');
-        if (config.optimization.reduzirLag) list.push('Rede');
-        showToast(`OTIMIZAÇÃO ZERO LAG • ${list.join(' + ')} • ${config.optimization.fpsTarget} FPS`, 3800, 'success');
-      };
+        // Capturar o evento beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Mostrar o botão de instalação
+            document.getElementById('installButton').style.display = 'block';
+        });
 
-      document.getElementById("dnsAndroidBtn").onclick = () => showToast("Auxílio DNS Android ativado! Configurando rotas...", 3000, 'success');
-      document.getElementById("dnsIphoneBtn").onclick = () => showToast("Auxílio DNS iPhone ativado! Ajustando proxies...", 3000, 'success');
+        // Função para instalar o app
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('App instalado com sucesso!');
+                        document.getElementById('installButton').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
 
-      document.getElementById('saveConfigBtn').onclick = saveConfig;
-      document.getElementById('loadConfigBtn').onclick = loadConfig;
+        // Detectar quando o app for instalado
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA instalado com sucesso!');
+            document.getElementById('installButton').style.display = 'none';
+        });
+    </script>
 
-      document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.onclick = () => {
-          document.querySelectorAll('.color-btn').forEach(b => b.style.border = '4px solid transparent');
-          btn.style.border = '4px solid white';
-          updateTheme(btn.dataset.color);
-          showToast('Tema atualizado', 1600);
-        };
-      });
+    <script>
+        // Criar chuva animada
+        function createRain() {
+            const rain = document.getElementById('rain');
+            const numberOfDrops = 150;
 
-      document.getElementById('openFFBtn').onclick = function(e) {
-        e.preventDefault();
-        this.textContent = 'INJETANDO PAYLOAD...';
-        this.disabled = true;
-        setTimeout(() => {
-          showToast('INJEÇÃO COMPLETA • Free Fire sendo aberto', 3000, 'success');
-          window.location.href = this.href;
-          setTimeout(() => {
-            if (document.hasFocus()) showToast('Jogo não abriu? Abra manualmente', 5000, 'warning');
-          }, 3500);
-          this.textContent = 'ABRIR FREE FIRE + INJETAR';
-          this.disabled = false;
-        }, 2400);
-      };
+            for (let i = 0; i < numberOfDrops; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'drop';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDuration = (Math.random() * 0.8 + 0.4) + 's';
+                drop.style.animationDelay = Math.random() * 3 + 's';
+                drop.style.opacity = Math.random() * 0.5 + 0.5;
+                rain.appendChild(drop);
+            }
+        }
 
-      document.getElementById('enterBtn').onclick = async () => {
-        const key = document.getElementById('licenseKey').value.trim().toUpperCase();
-        if (key.length < 8) return showToast('Key inválida', 3000, 'error');
+        createRain();
 
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('mainPanel').style.display = 'block';
+        // Verificar Key - CORRIGIDO!
+        function verifyKey() {
+            const keyInput = document.getElementById('keyInput');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            const keyValue = keyInput.value.trim().toUpperCase();
+            
+            // Keys válidas (agora todas em MAIÚSCULAS para comparação)
+            const validKeys = ['', 'PROJECT', 'KEY-PROJECT'];
+            
+            if (validKeys.includes(keyValue)) {
+                // Key correta
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'block';
+                keyInput.style.borderColor = '#51cf66';
+                
+                // Espera 1 segundo e mostra a tela principal
+                setTimeout(() => {
+                    document.getElementById('keyScreen').style.display = 'none';
+                    document.getElementById('mainScreen').style.display = 'block';
+                }, 1000);
+            } else {
+                // Key errada
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'block';
+                keyInput.style.borderColor = '#ff6b6b';
+                
+                // Vibra o input
+                keyInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    keyInput.style.animation = '';
+                }, 500);
+            }
+        }
 
-        await loadSystemInfo(key);
-        loadConfig();
-        showToast('PROJECT X RED v4.2 • AUTENTICAÇÃO OK', 4500, 'success');
-      };
+        // Permite Enter para verificar
+        document.getElementById('keyInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyKey();
+            }
+        });
 
-      document.getElementById('licenseKey').onkeypress = e => {
-        if (e.key === 'Enter') document.getElementById('enterBtn').click();
-      };
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+        }
 
-      particlesJS('particles-js', {
-        particles: {
-          number: {value: 110},
-          color: {value: currentColor},
-          opacity: {value: 0.68},
-          size: {value: 4},
-          line_linked: {enable: true, distance: 150, color: currentColor, opacity: 0.42, width: 1.3},
-          move: {enable: true, speed: 3.2}
-        },
-        interactivity: {events: {onhover: {enable: true, mode: 'grab'}}}
-      });
+        function toggleRadio(element) {
+            const radios = element.closest('.radio-group').querySelectorAll('.radio');
+            radios.forEach(radio => radio.classList.remove('checked'));
+            element.classList.add('checked');
+        }
 
-      document.querySelector('.color-btn[data-color="#808080"]').style.border = '4px solid white';
-    });
+        function switchTab(index, element) {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
 
-    // Registro do Service Worker para PWA (instalável)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker registrado!'))
-        .catch(err => console.warn('Erro no SW:', err));
-    }
-  </script>
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach((content, i) => {
+                content.style.display = i === index ? 'block' : 'none';
+            });
+        }
 
-</body>
-</html> 'success');
-      document.getElementById("dnsIphoneBtn").onclick = () => showToast("Auxílio DNS iPhone ativado! Ajustando proxies...", 3000, 'success');
+        function updateFov(value) {
+            document.getElementById('fovValue').textContent = value;
+        }
 
-      document.getElementById('saveConfigBtn').onclick = saveConfig;
-      document.getElementById('loadConfigBtn').onclick = loadConfig;
+        function openFreeFire() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                window.location.href = "freefire://";
+                setTimeout(() => {
+                    alert("Abrindo Free Fire no iPhone...");
+                }, 100);
+            }
+            else if (/android/i.test(userAgent)) {
+                window.location.href = "intent://launch#Intent;scheme=freefire;package=com.dts.freefireth;end";
+                setTimeout(() => {
+                    alert("Abrindo Free Fire no Android...");
+                }, 100);
+            }
+            else {
+                alert("Este recurso funciona apenas em dispositivos móveis (iPhone ou Android).\n\nPor favor, acesse pelo seu celular!");
+            }
+        }
 
-      document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.onclick = () => {
-          document.querySelectorAll('.color-btn').forEach(b => b.style.border = '4px solid transparent');
-          btn.style.border = '4px solid white';
-          updateTheme(btn.dataset.color);
-          showToast('Tema atualizado', 1600);
-        };
-      });
-
-      document.getElementById('openFFBtn').onclick = function(e) {
-        e.preventDefault();
-        this.textContent = 'INJETANDO PAYLOAD...';
-        this.disabled = true;
-        setTimeout(() => {
-          showToast('INJEÇÃO COMPLETA • Free Fire sendo aberto', 3000, 'success');
-          window.location.href = this.href;
-          setTimeout(() => {
-            if (document.hasFocus()) showToast('Jogo não abriu? Abra manualmente', 5000, 'warning');
-          }, 3500);
-          this.textContent = 'ABRIR FREE FIRE + INJETAR';
-          this.disabled = false;
-        }, 2400);
-      };
-
-      document.getElementById('enterBtn').onclick = async () => {
-        const key = document.getElementById('licenseKey').value.trim().toUpperCase();
-        if (key.length < 8) return showToast('Key inválida', 3000, 'error');
-
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('mainPanel').style.display = 'block';
-
-        await loadSystemInfo(key);
-        loadConfig();
-        showToast('PROJECT X RED v4.2 • AUTENTICAÇÃO OK', 4500, 'success');
-      };
-
-      document.getElementById('licenseKey').onkeypress = e => {
-        if (e.key === 'Enter') document.getElementById('enterBtn').click();
-      };
-
-      particlesJS('particles-js', {
-        particles: {
-          number: {value: 110},
-          color: {value: currentColor},
-          opacity: {value: 0.68},
-          size: {value: 4},
-          line_linked: {enable: true, distance: 150, color: currentColor, opacity: 0.42, width: 1.3},
-          move: {enable: true, speed: 3.2}
-        },
-        interactivity: {events: {onhover: {enable: true, mode: 'grab'}}}
-      });
-
-      document.querySelector('.color-btn[data-color="#808080"]').style.border = '4px solid white';
-    });
-  </script>
-
-  <!-- 
-  ======================================================================
-  MAPEAMENTO COMPLETO DE TODAS AS FUNÇÕES E HANDLERS DO CÓDIGO
-  (Fhshausu - Fevereiro 2026)
-  ======================================================================
-
-  FUNÇÕES NOMEADAS DECLARADAS:
-
-  1. saveConfig()                  → Salva config no localStorage + toast
-  2. loadConfig()                  → Carrega config do localStorage + applyConfigToUI() + toast
-  3. applyConfigToUI()             → Aplica valores de config nos inputs da interface
-  4. updateTheme(color)            → Atualiza cor do tema e partículas
-  5. showToast(message, duration, type) → Exibe toast com cor por tipo
-  6. getDeviceId()                 → Gera/recupera ID único do dispositivo
-  7. getDeviceModel()              → Extrai modelo do userAgent
-  8. loadSystemInfo(key)           → Preenche infos (key, id, modelo, horário, região via API)
-  9. updateAimbotButton()          → Muda texto e cor do botão ativar/desativar
-  10. updateStatusIndicator()      → Alterna cor do status (verde/vermelho)
-
-  EngineV11 (objeto de simulação):
-  11. EngineV11.start(bone)        → Inicia intervalo de simulação fake de headshots
-  12. EngineV11.stop()             → Para simulação e reseta streak
-  13. initPrecisionCanvas()        → Cria canvas de precisão na aba Aimbot
-  14. updatePrecisionGraph(%)      → Redesenha gráfico de precisão com barra e textos
-
-  HANDLERS DE EVENTOS (definidos no DOMContentLoaded):
-
-  - Clique nas tabs                     → Alterna abas ativas
-  - onchange ativarAuxilio              → Atualiza config.enabled + status
-  - onchange ativarFov                  → Mostra/esconde container FOV
-  - oninput fovRange                    → Atualiza config.fov + texto
-  - oninput assistStrength              → Atualiza config.strength + texto
-  - oninput smoothnessRange             → Atualiza config.smoothness + texto
-  - oninput maxLockDist                 → Atualiza config.maxDistance + texto
-  - onchange auxType (select)           → Atualiza config.bone
-  - onchange radios tipo (atirar/olhar) → Atualiza config.trigger
-  - onchange checkboxes Extra           → Atualiza config.extras.{chave}
-  - onchange checkboxes Otimização      → Atualiza config.optimization.{chave}
-  - onchange fpsSelect                  → Atualiza config.optimization.fpsTarget
-  - onclick ativarBtn                   → Alterna active, inicia/para EngineV11, toast
-  - onclick ativarExtraBtn              → Lista extras ativos + toast
-  - onclick aplicarOtimizacaoBtn        → Resume otimizações + FPS + toast
-  - onclick dnsAndroidBtn               → Toast fake DNS Android
-  - onclick dnsIphoneBtn                → Toast fake DNS iPhone
-  - onclick saveConfigBtn               → Chama saveConfig()
-  - onclick loadConfigBtn               → Chama loadConfig()
-  - onclick cada color-btn              → Atualiza tema + toast
-  - onclick openFFBtn                   → Simula injeção + tenta abrir Free Fire
-  - onclick enterBtn                    → Valida key, mostra painel, carrega info/config
-  - onkeypress licenseKey (Enter)       → Aciona enterBtn
-
-  Total aproximado: 14 funções nomeadas + \~20 handlers de eventos
-  ======================================================================
-  -->
+        // Função para instalar o auxílio no jogo
+        function installAuxilio() {
+            // Carrega as configurações do gameConfig
+            const configElement = document.getElementById('gameConfig');
+            const gameConfig = JSON.parse(configElement.textContent);
+            
+            // Simula a instalação com animação
+            const button = event.target;
+            button.innerHTML = '⏳ INSTALANDO...';
+            button.style.background = 'linear-gradient(135deg, #ffa726 0%, #ff9800 100%)';
+            button.disabled = true;
+            
+            // Simula processo de instalação
+            setTimeout(() => {
+                button.innerHTML = '✅ AUXÍLIO INSTALADO!';
+                button.style.background = 'linear-gradient(135deg, #66bb6a 0%, #4caf50 100%)';
+                
+                // Mostra detalhes da instalação
+                setTimeout(() => {
+                    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                    
+                    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                        alert(`✅ AUXÍLIO INSTALADO COM SUCESSO!\n\n` +
+                              `📊 Configurações Aplicadas:\n` +
+                              `• AimBot: ${gameConfig.AimBot_Settings.AIM_LEVEL_PERCENT}\n` +
+                              `• Sensibilidade: ${gameConfig.AimBot_Settings.AIMBOT_SENSITIVITY}\n` +
+                              `• Precisão: ${gameConfig.AimConfig.Precision * 100}%\n` +
+                              `• Headshot Mode: Ativado\n\n` +
+                              `🎮 Abra o Free Fire e aproveite!`);
+                    }
+                    else if (/android/i.test(userAgent)) {
+                        alert(`✅ AUXÍLIO INSTALADO COM SUCESSO!\n\n` +
+                              `📊 Configurações Aplicadas:\n` +
+                              `• AimBot: ${gameConfig.AimBot_Settings.AIM_LEVEL_PERCENT}\n` +
+                              `• Sensibilidade: ${gameConfig.AimBot_Settings.AIMBOT_SENSITIVITY}\n` +
+                              `• Precisão: ${gameConfig.AimConfig.Precision * 100}%\n` +
+                              `• Headshot Mode: Ativado\n` +
+                              `• FOV: ${gameConfig.DisplaySettings.Fov}\n` +
+                              `• Mouse Smoothing: Habilitado\n\n` +
+                              `🎮 Abra o Free Fire e aproveite!`);
+                    }
+                    else {
+                        alert("⚠️ Este recurso funciona apenas em dispositivos móveis!\n\nPor favor, acesse pelo seu celular (Android ou iPhone).");
+                    }
+                    
+                    // Resetar botão depois de 3 segundos
+                    setTimeout(() => {
+                        button.innerHTML = '⚡ INSTALAR AUXÍLIO NO JOGO';
+                        button.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%)';
+                        button.disabled = false;
+                    }, 3000);
+                }, 500);
+            }, 2000);
+        }
+    </script>
 
 </body>
-</html>
+</html>     }
+    </script>
+
+</body>
+</html>>
+
+</body>
+  </html>
