@@ -1,0 +1,26 @@
+{
+  "name": "Spotify",
+  "short_name": "Spotify",
+  "description": "Spotify Music",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1DB954",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "spotify.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "spotify.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment"],
+  "lang": "pt-BR"
+}
